@@ -9,9 +9,6 @@ use PNDP\AST\NixFunInvocation;
  */
 class GitSource extends Source
 {
-	/** Stores the output hash of the download */
-	public $hash;
-
 	/**
 	 * Constructs a new Git dependency instance.
 	 *
@@ -28,15 +25,6 @@ class GitSource extends Source
 	 */
 	public function fetch()
 	{
-		$outputStr = shell_exec('nix-prefetch-git "'.$this->sourceObj['url'].'" '.$this->sourceObj["reference"]);
-
-		if($outputStr === false)
-			throw new Exception("Error while invoking nix-prefetch-git");
-		else
-		{
-			$output = json_decode($outputStr, true);
-			$this->hash = $output["sha256"];
-		}
 	}
 
 	/**
@@ -46,11 +34,10 @@ class GitSource extends Source
 	{
 		$ast = parent::toNixAST();
 
-		$ast["src"] = new NixFunInvocation(new NixExpression("fetchgit"), array(
+		$ast["src"] = new NixFunInvocation(new NixExpression("builtins.fetchGit"), array(
 			"name" => strtr($this->package["name"], "/", "-").'-'.$this->sourceObj["reference"],
 			"url" => $this->sourceObj["url"],
 			"rev" => $this->sourceObj["reference"],
-			"sha256" => $this->hash
 		));
 
 		return $ast;

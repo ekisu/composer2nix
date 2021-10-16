@@ -52,6 +52,7 @@ class PackagesExpression extends NixASTNode
 	{
 		return new NixFunction(array(
 			"composerEnv" => new NixNoDefault(),
+			"builtins" => new NixNoDefault(),
 			"fetchurl" => new NixNoDefault(),
 			"fetchgit" => null,
 			"fetchhg" => null,
