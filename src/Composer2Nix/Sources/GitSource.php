@@ -38,6 +38,7 @@ class GitSource extends Source
 			"name" => strtr($this->package["name"], "/", "-").'-'.$this->sourceObj["reference"],
 			"url" => $this->sourceObj["url"],
 			"rev" => $this->sourceObj["reference"],
+			"allRefs" => true,
 		));
 
 		return $ast;
